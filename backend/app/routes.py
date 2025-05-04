@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from bson.objectid import ObjectId
 from .models import serialize_task, get_latest_analytics
 
 routes = Blueprint('routes', __name__)  # Use a single blueprint
@@ -33,7 +32,17 @@ def create_task():
 @routes.route('/analytics', methods=['GET'])
 def fetch_analytics():
     try:
-        analytics = get_latest_analytics()
+        analytics = get_latest_analytics() 
         return jsonify(analytics), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@routes.route('/test-db', methods=['GET'])
+def test_db():
+    try:
+        db = current_app.db
+        db.admin.command('ping') 
+        return jsonify({"msg": "MongoDB connection is active!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
