@@ -1,4 +1,5 @@
-
+from .routes import routes
+from .auth import auth_bp
 
 from flask import Flask
 from flask_cors import CORS
@@ -15,9 +16,9 @@ def create_app():
     client = MongoClient("mongodb://localhost:27017/")
     app.db = client["taskmanager"]
 
-    from .routes import task_bp
-    from .auth import auth_bp
-    app.register_blueprint(task_bp)
+    
+   
     app.register_blueprint(auth_bp)
+    app.register_blueprint(routes)
 
     return app
